@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authorization;
+using MiniApp2.API.Requirements;
 using SharedLibrary.Configurations;
 using SharedLibrary.Extensions;
 
@@ -14,6 +16,16 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<IAuthorizationHandler,BirthTimeRequirementHandler>();
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AgePolicy", policy =>
+    {
+        policy.Requirements.Add(new BirthDateRequirement(18));
+    });
+});
 
 var app = builder.Build();
 

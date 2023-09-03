@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -8,6 +8,7 @@ namespace MiniApp2.API.Controllers
     [ApiController]
     public class InvoiceController : ControllerBase
     {
+        [Authorize(Policy = "AgePolicy")]
         [HttpGet]
         public IActionResult GetInvoices()
         {

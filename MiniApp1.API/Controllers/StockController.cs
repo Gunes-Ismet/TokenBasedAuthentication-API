@@ -6,9 +6,9 @@ namespace MiniApp1.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles ="admin")]
     public class StockController : ControllerBase
     {
+        [Authorize(Roles = "admin", Policy = "AnkaraPolicy")]
         [HttpGet]
         public IActionResult GetStock()
         {
