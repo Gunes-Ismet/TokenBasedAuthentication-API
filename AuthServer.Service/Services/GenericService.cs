@@ -44,7 +44,7 @@ namespace AuthServer.Service.Services
             return Response<Dto>.Success(ObjectMapper.Mapper.Map<Dto>(entity), 200);
         }
 
-        public async Task<Response<NoDataDTO>> Remove(int id)
+        public async Task<Response<NoDataDTO>> RemoveAsync(int id)
         {
             var isExistEntity = await _repository.GetByIdAsync(id);
             if (isExistEntity == null)
@@ -56,7 +56,7 @@ namespace AuthServer.Service.Services
             return Response<NoDataDTO>.Success(204);
         }
 
-        public async Task<Response<NoDataDTO>> Update(Dto dto,int id)
+        public async Task<Response<NoDataDTO>> UpdateAsync(Dto dto,int id)
         {
             var isExistEntity = await _repository.GetByIdAsync(id);
             if (isExistEntity == null)

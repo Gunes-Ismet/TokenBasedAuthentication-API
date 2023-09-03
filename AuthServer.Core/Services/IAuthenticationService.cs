@@ -5,9 +5,9 @@ namespace AuthServer.Core.Services
 {
     public interface IAuthenticationService
     {
-        Task<Response<TokenDTO>> CreateToken(LoginDTO loginDTO);
-        Task<Response<TokenDTO>> CreateTokenByRefreshToken(string refreshToken);
-        Task<Response<NoDataDTO>> RevokeRefreshToken(string refreshToken);
+        Task<Response<TokenDTO>> CreateTokenAsync(LoginDTO loginDTO);
+        Task<Response<TokenDTO>> CreateTokenByRefreshTokenAsync(RefreshTokenDTO refreshToken);
+        Task<Response<NoDataDTO>> RevokeRefreshToken(RefreshTokenDTO refreshToken);
         Response<ClientTokenDTO> CreateTokenByClient(ClientLoginDTO clientLoginDTO);
     }
 }

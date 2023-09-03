@@ -2,20 +2,16 @@
 {
     public class ErrorDTO
     {
-        public List<String> Errors { get; private set; }
+        public List<String> Errors { get; private set; } = new List<String>();
         public bool IsShow { get; private set; }
-        public ErrorDTO()
-        {
-            Errors = new List<String>();
-        }
         public ErrorDTO(string error, bool isShow)
         {
             Errors.Add(error);
-            isShow = true;
+            IsShow = isShow;
         }
         public ErrorDTO(List<string> error, bool isShow)
         {
-            Errors = Errors;
+            Errors = error;
             IsShow = isShow;
         }
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using SharedLibrary.Configurations;
+using SharedLibrary.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -28,8 +29,9 @@ namespace AuthServer.Service.Services
             rnd.GetBytes(numberByte);
             return Convert.ToBase64String(numberByte);
         }
-        private IEnumerable<Claim> GetClaims(UserApp userApp, List<String> audiences)
+        private async Task<IEnumerable<Claim>> GetClaims(UserApp userApp, List<String> audiences)
         {
+            var userRoles = await _userManager.GetRolesAsync(userApp);
             var userList = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier,userApp.Id),
@@ -38,6 +40,7 @@ namespace AuthServer.Service.Services
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
             };
             userList.AddRange(audiences.Select(x => new Claim(JwtRegisteredClaimNames.Aud, x)));
+            userList.AddRange(userRoles.Select(x => new Claim(ClaimTypes.Role, x)));
             return userList;
         }
         private IEnumerable<Claim> GetClaimsByClients(Client client)
@@ -68,7 +71,7 @@ namespace AuthServer.Service.Services
             };
             return clientTokenDto;
         }
-        public TokenDTO CreateToken(UserApp userApp)
+        public async Task<TokenDTO> CreateToken(UserApp userApp)
         {
             var accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
             var refreshTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.RefreshTokenExpiration);
@@ -78,7 +81,7 @@ namespace AuthServer.Service.Services
                 issuer: _tokenOptions.Issuer,
                 expires: accessTokenExpiration,
                 notBefore: DateTime.Now,
-                claims: GetClaims(userApp,_tokenOptions.Audience),
+                claims: await GetClaims(userApp,_tokenOptions.Audience),
                 signingCredentials: signingCredentials);
             var handler = new JwtSecurityTokenHandler();
             var token = handler.WriteToken(jwtSecurityToken);
